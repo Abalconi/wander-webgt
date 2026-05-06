@@ -60,7 +60,7 @@ function Index() {
 
           {/* Search box */}
           <div className="mt-12 rounded-xl border border-primary-foreground/20 bg-background/95 p-4 shadow-luxe backdrop-blur md:mt-16 md:p-6">
-            <div className="grid gap-3 md:grid-cols-4">
+            <div className="grid gap-3 md:grid-cols-5">
               <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
                 Destino
                 <select className="rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground">
@@ -70,6 +70,10 @@ function Index() {
               </label>
               <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
                 Fecha de salida
+                <input type="date" className="rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground" />
+              </label>
+              <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
+                Fecha de regreso
                 <input type="date" className="rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground" />
               </label>
               <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
