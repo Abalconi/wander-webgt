@@ -75,10 +75,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Wanderlux — Agencia de Viajes de Lujo" },
+      { title: "Wanderlux — Agencia de Viajes" },
       { name: "description", content: "Agencia de viajes especialista en paquetes todo incluido al Caribe y Latinoamérica." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Wanderlux — Agencia de Viajes" },
+      { name: "twitter:title", content: "Wanderlux — Agencia de Viajes" },
+      { property: "og:description", content: "Agencia de viajes especialista en paquetes todo incluido al Caribe y Latinoamérica." },
+      { name: "twitter:description", content: "Agencia de viajes especialista en paquetes todo incluido al Caribe y Latinoamérica." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/27d6f2ee-57a2-43bb-bbed-8749108d0ce3/id-preview-9bd25db1--7c4c5a08-14aa-4516-81db-661b6e0b2b86.lovable.app-1778093143171.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/27d6f2ee-57a2-43bb-bbed-8749108d0ce3/id-preview-9bd25db1--7c4c5a08-14aa-4516-81db-661b6e0b2b86.lovable.app-1778093143171.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
