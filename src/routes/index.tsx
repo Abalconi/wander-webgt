@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Search, Plane, Hotel, MapPin, Sparkles } from "lucide-react";
+import { useState } from "react";
 import heroImg from "@/assets/hero.jpg";
 import { destinations, WHATSAPP_URL } from "@/data/destinations";
 
