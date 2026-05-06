@@ -75,9 +75,15 @@ function Index() {
             <div className="grid gap-3 md:grid-cols-5">
               <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
                 Destino
-                <select className="rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground">
-                  <option>Cualquier destino</option>
-                  {destinations.map((d) => <option key={d.slug}>{d.name}</option>)}
+                <select
+                  value={selectedSlug}
+                  onChange={(e) => setSelectedSlug(e.target.value)}
+                  className="rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground"
+                >
+                  <option value="">Cualquier destino</option>
+                  {destinations.map((d) => (
+                    <option key={d.slug} value={d.slug}>{d.name}</option>
+                  ))}
                 </select>
               </label>
               <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
@@ -97,14 +103,13 @@ function Index() {
                   <option>Grupo</option>
                 </select>
               </label>
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={handleSearch}
                 className="mt-auto inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
               >
                 <Search className="h-4 w-4" /> Buscar viaje
-              </a>
+              </button>
             </div>
           </div>
         </div>
