@@ -18,6 +18,17 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const navigate = useNavigate();
+  const [selectedSlug, setSelectedSlug] = useState("");
+
+  const handleSearch = () => {
+    if (selectedSlug) {
+      navigate({ to: "/destinos/$slug", params: { slug: selectedSlug } });
+    } else {
+      navigate({ to: "/destinos" });
+    }
+  };
+
   return (
     <>
       {/* HERO */}
