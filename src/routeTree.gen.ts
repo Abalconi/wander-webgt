@@ -9,38 +9,103 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OfertasRouteImport } from './routes/ofertas'
+import { Route as GuiaViajeroRouteImport } from './routes/guia-viajero'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DestinosIndexRouteImport } from './routes/destinos.index'
+import { Route as DestinosSlugRouteImport } from './routes/destinos.$slug'
 
+const OfertasRoute = OfertasRouteImport.update({
+  id: '/ofertas',
+  path: '/ofertas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuiaViajeroRoute = GuiaViajeroRouteImport.update({
+  id: '/guia-viajero',
+  path: '/guia-viajero',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DestinosIndexRoute = DestinosIndexRouteImport.update({
+  id: '/destinos/',
+  path: '/destinos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DestinosSlugRoute = DestinosSlugRouteImport.update({
+  id: '/destinos/$slug',
+  path: '/destinos/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/guia-viajero': typeof GuiaViajeroRoute
+  '/ofertas': typeof OfertasRoute
+  '/destinos/$slug': typeof DestinosSlugRoute
+  '/destinos/': typeof DestinosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/guia-viajero': typeof GuiaViajeroRoute
+  '/ofertas': typeof OfertasRoute
+  '/destinos/$slug': typeof DestinosSlugRoute
+  '/destinos': typeof DestinosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/guia-viajero': typeof GuiaViajeroRoute
+  '/ofertas': typeof OfertasRoute
+  '/destinos/$slug': typeof DestinosSlugRoute
+  '/destinos/': typeof DestinosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/guia-viajero'
+    | '/ofertas'
+    | '/destinos/$slug'
+    | '/destinos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/guia-viajero' | '/ofertas' | '/destinos/$slug' | '/destinos'
+  id:
+    | '__root__'
+    | '/'
+    | '/guia-viajero'
+    | '/ofertas'
+    | '/destinos/$slug'
+    | '/destinos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GuiaViajeroRoute: typeof GuiaViajeroRoute
+  OfertasRoute: typeof OfertasRoute
+  DestinosSlugRoute: typeof DestinosSlugRoute
+  DestinosIndexRoute: typeof DestinosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ofertas': {
+      id: '/ofertas'
+      path: '/ofertas'
+      fullPath: '/ofertas'
+      preLoaderRoute: typeof OfertasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guia-viajero': {
+      id: '/guia-viajero'
+      path: '/guia-viajero'
+      fullPath: '/guia-viajero'
+      preLoaderRoute: typeof GuiaViajeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +113,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/destinos/': {
+      id: '/destinos/'
+      path: '/destinos'
+      fullPath: '/destinos/'
+      preLoaderRoute: typeof DestinosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/destinos/$slug': {
+      id: '/destinos/$slug'
+      path: '/destinos/$slug'
+      fullPath: '/destinos/$slug'
+      preLoaderRoute: typeof DestinosSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GuiaViajeroRoute: GuiaViajeroRoute,
+  OfertasRoute: OfertasRoute,
+  DestinosSlugRoute: DestinosSlugRoute,
+  DestinosIndexRoute: DestinosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
