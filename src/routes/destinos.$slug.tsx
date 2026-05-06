@@ -83,7 +83,7 @@ function DestinoDetalle() {
               Salidas semanales desde Ciudad de Guatemala. Descuentos especiales en grupo y promociones de temporada.
             </p>
             <ul className="mt-6 space-y-3">
-              {dest.highlights.map((h) => (
+              {dest.highlights.map((h: string) => (
                 <li key={h} className="flex items-center gap-3 text-sm">
                   <Check className="h-4 w-4 text-emerald" /> {h}
                 </li>
