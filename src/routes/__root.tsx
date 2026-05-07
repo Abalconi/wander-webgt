@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { LangProvider } from "@/lib/lang";
 
 function NotFoundComponent() {
   return (
@@ -121,12 +122,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Header />
-      <main className="min-h-[60vh]">
-        <Outlet />
-      </main>
-      <Footer />
-      <WhatsAppFloat />
+      <LangProvider>
+        <Header />
+        <main className="min-h-[60vh]">
+          <Outlet />
+        </main>
+        <Footer />
+        <WhatsAppFloat />
+      </LangProvider>
     </QueryClientProvider>
   );
 }
