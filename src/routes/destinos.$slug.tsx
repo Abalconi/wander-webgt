@@ -100,7 +100,7 @@ function DestinoDetalle() {
               {t("Puntos de interés en", "Points of interest in")} {dest.name}
             </h2>
             <div className="mt-4 flex flex-wrap gap-2">
-              {dest.attractions.map((a) => (
+              {dest.attractions.map((a: string) => (
                 <span key={a} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-primary">
                   <MapPin className="h-3 w-3 text-gold" /> {a}
                 </span>
@@ -111,7 +111,7 @@ function DestinoDetalle() {
               {t("Puntos destacados del paquete", "Package highlights")}
             </h2>
             <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-              {(lang === "en" ? dest.highlightsEn : dest.highlights).map((h) => (
+              {(lang === "en" ? dest.highlightsEn : dest.highlights).map((h: string) => (
                 <li key={h} className="flex items-center gap-2 text-sm text-foreground">
                   <span className="inline-block h-2 w-2 rounded-full bg-gold" /> {h}
                 </li>
@@ -122,7 +122,7 @@ function DestinoDetalle() {
               {t("El paquete incluye", "The package includes")}
             </h2>
             <ul className="mt-4 space-y-2">
-              {includesList.map((item) => (
+              {includesList.map((item: string) => (
                 <li key={item} className="flex items-center gap-2 text-sm text-foreground">
                   <Check className="h-4 w-4 text-gold" /> {item}
                 </li>
