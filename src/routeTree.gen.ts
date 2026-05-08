@@ -16,6 +16,7 @@ import { Route as EnIndexRouteImport } from './routes/en.index'
 import { Route as DestinosIndexRouteImport } from './routes/destinos.index'
 import { Route as DestinosSlugRouteImport } from './routes/destinos.$slug'
 import { Route as EnDestinosIndexRouteImport } from './routes/en.destinos.index'
+import { Route as EnDestinosSlugRouteImport } from './routes/en.destinos.$slug'
 
 const OfertasRoute = OfertasRouteImport.update({
   id: '/ofertas',
@@ -52,6 +53,11 @@ const EnDestinosIndexRoute = EnDestinosIndexRouteImport.update({
   path: '/en/destinos/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnDestinosSlugRoute = EnDestinosSlugRouteImport.update({
+  id: '/en/destinos/$slug',
+  path: '/en/destinos/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/destinos/$slug': typeof DestinosSlugRoute
   '/destinos/': typeof DestinosIndexRoute
   '/en/': typeof EnIndexRoute
+  '/en/destinos/$slug': typeof EnDestinosSlugRoute
   '/en/destinos/': typeof EnDestinosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/destinos/$slug': typeof DestinosSlugRoute
   '/destinos': typeof DestinosIndexRoute
   '/en': typeof EnIndexRoute
+  '/en/destinos/$slug': typeof EnDestinosSlugRoute
   '/en/destinos': typeof EnDestinosIndexRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/destinos/$slug': typeof DestinosSlugRoute
   '/destinos/': typeof DestinosIndexRoute
   '/en/': typeof EnIndexRoute
+  '/en/destinos/$slug': typeof EnDestinosSlugRoute
   '/en/destinos/': typeof EnDestinosIndexRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/destinos/$slug'
     | '/destinos/'
     | '/en/'
+    | '/en/destinos/$slug'
     | '/en/destinos/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/destinos/$slug'
     | '/destinos'
     | '/en'
+    | '/en/destinos/$slug'
     | '/en/destinos'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/destinos/$slug'
     | '/destinos/'
     | '/en/'
+    | '/en/destinos/$slug'
     | '/en/destinos/'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   DestinosSlugRoute: typeof DestinosSlugRoute
   DestinosIndexRoute: typeof DestinosIndexRoute
   EnIndexRoute: typeof EnIndexRoute
+  EnDestinosSlugRoute: typeof EnDestinosSlugRoute
   EnDestinosIndexRoute: typeof EnDestinosIndexRoute
 }
 
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnDestinosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/destinos/$slug': {
+      id: '/en/destinos/$slug'
+      path: '/en/destinos/$slug'
+      fullPath: '/en/destinos/$slug'
+      preLoaderRoute: typeof EnDestinosSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   DestinosSlugRoute: DestinosSlugRoute,
   DestinosIndexRoute: DestinosIndexRoute,
   EnIndexRoute: EnIndexRoute,
+  EnDestinosSlugRoute: EnDestinosSlugRoute,
   EnDestinosIndexRoute: EnDestinosIndexRoute,
 }
 export const routeTree = rootRouteImport
