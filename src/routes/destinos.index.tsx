@@ -14,7 +14,7 @@ export const Route = createFileRoute("/destinos/")({
   component: Destinos,
 });
 
-function Destinos() {
+export function Destinos() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
       <p className="text-sm font-semibold uppercase tracking-widest text-emerald">Catálogo</p>

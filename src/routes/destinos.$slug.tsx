@@ -33,7 +33,7 @@ export const Route = createFileRoute("/destinos/$slug")({
   ),
 });
 
-function DestinoDetalle() {
+export function DestinoDetalle() {
   const { dest } = Route.useLoaderData();
   const { t, lang } = useLang();
   const [openDialog, setOpenDialog] = useState(false);

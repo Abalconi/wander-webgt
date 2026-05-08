@@ -22,7 +22,7 @@ const articles = [
   { Icon: Plane, title: "Cómo conseguir vuelos baratos", excerpt: "Trucos profesionales para encontrar las mejores tarifas aéreas durante todo el año." },
 ];
 
-function Guia() {
+export function Guia() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
       <p className="text-sm font-semibold uppercase tracking-widest text-emerald">Blog</p>
