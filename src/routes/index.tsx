@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function Index() {
+export function Index() {
   const { t } = useLang();
   const navigate = useNavigate();
   const [selectedSlug, setSelectedSlug] = useState("");

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/ofertas")({
   component: Ofertas,
 });
 
-function Ofertas() {
+export function Ofertas() {
   const ofertas = [
     { d: destinations[1], price: 1099, nights: 5, label: "Paquetes económicos a Cancún" },
     { d: destinations[0], price: 1299, nights: 6, label: "Punta Cana en oferta" },
