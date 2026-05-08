@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ForceLang } from "@/components/ForceLang";
-import { Route as IndexRoute } from "./index";
+import { Index } from "./index";
 
 export const Route = createFileRoute("/en/")({
   head: () => ({
@@ -11,13 +11,10 @@ export const Route = createFileRoute("/en/")({
       { property: "og:description", content: "All-inclusive packages to the best destinations in the Caribbean and Latin America." },
     ],
   }),
-  component: () => {
-    const Comp = IndexRoute.options.component!;
-    return (
-      <>
-        <ForceLang lang="en" />
-        <Comp />
-      </>
-    );
-  },
+  component: () => (
+    <>
+      <ForceLang lang="en" />
+      <Index />
+    </>
+  ),
 });
