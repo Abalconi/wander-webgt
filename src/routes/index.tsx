@@ -53,15 +53,17 @@ export function Index() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Resort frente al mar"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-hero" />
+      <section className="relative isolate">
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src={heroImg}
+            alt="Resort frente al mar"
+            width={1920}
+            height={1080}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-hero" />
+        </div>
         <div className="relative mx-auto max-w-7xl px-4 py-24 md:px-6 md:py-36 lg:py-44">
           <div className="max-w-3xl text-primary-foreground">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/30 bg-primary-foreground/10 px-3 py-1 text-xs font-medium backdrop-blur">
