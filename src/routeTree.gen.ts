@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as EnIndexRouteImport } from './routes/en.index'
 import { Route as DestinosIndexRouteImport } from './routes/destinos.index'
 import { Route as EnOfertasRouteImport } from './routes/en.ofertas'
+import { Route as EnGuiaViajeroRouteImport } from './routes/en.guia-viajero'
 import { Route as DestinosSlugRouteImport } from './routes/destinos.$slug'
 import { Route as EnDestinosIndexRouteImport } from './routes/en.destinos.index'
 import { Route as EnDestinosSlugRouteImport } from './routes/en.destinos.$slug'
@@ -49,6 +50,11 @@ const EnOfertasRoute = EnOfertasRouteImport.update({
   path: '/en/ofertas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnGuiaViajeroRoute = EnGuiaViajeroRouteImport.update({
+  id: '/en/guia-viajero',
+  path: '/en/guia-viajero',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DestinosSlugRoute = DestinosSlugRouteImport.update({
   id: '/destinos/$slug',
   path: '/destinos/$slug',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/guia-viajero': typeof GuiaViajeroRoute
   '/ofertas': typeof OfertasRoute
   '/destinos/$slug': typeof DestinosSlugRoute
+  '/en/guia-viajero': typeof EnGuiaViajeroRoute
   '/en/ofertas': typeof EnOfertasRoute
   '/destinos/': typeof DestinosIndexRoute
   '/en/': typeof EnIndexRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/guia-viajero': typeof GuiaViajeroRoute
   '/ofertas': typeof OfertasRoute
   '/destinos/$slug': typeof DestinosSlugRoute
+  '/en/guia-viajero': typeof EnGuiaViajeroRoute
   '/en/ofertas': typeof EnOfertasRoute
   '/destinos': typeof DestinosIndexRoute
   '/en': typeof EnIndexRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/guia-viajero': typeof GuiaViajeroRoute
   '/ofertas': typeof OfertasRoute
   '/destinos/$slug': typeof DestinosSlugRoute
+  '/en/guia-viajero': typeof EnGuiaViajeroRoute
   '/en/ofertas': typeof EnOfertasRoute
   '/destinos/': typeof DestinosIndexRoute
   '/en/': typeof EnIndexRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/guia-viajero'
     | '/ofertas'
     | '/destinos/$slug'
+    | '/en/guia-viajero'
     | '/en/ofertas'
     | '/destinos/'
     | '/en/'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/guia-viajero'
     | '/ofertas'
     | '/destinos/$slug'
+    | '/en/guia-viajero'
     | '/en/ofertas'
     | '/destinos'
     | '/en'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/guia-viajero'
     | '/ofertas'
     | '/destinos/$slug'
+    | '/en/guia-viajero'
     | '/en/ofertas'
     | '/destinos/'
     | '/en/'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   GuiaViajeroRoute: typeof GuiaViajeroRoute
   OfertasRoute: typeof OfertasRoute
   DestinosSlugRoute: typeof DestinosSlugRoute
+  EnGuiaViajeroRoute: typeof EnGuiaViajeroRoute
   EnOfertasRoute: typeof EnOfertasRoute
   DestinosIndexRoute: typeof DestinosIndexRoute
   EnIndexRoute: typeof EnIndexRoute
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnOfertasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/guia-viajero': {
+      id: '/en/guia-viajero'
+      path: '/en/guia-viajero'
+      fullPath: '/en/guia-viajero'
+      preLoaderRoute: typeof EnGuiaViajeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/destinos/$slug': {
       id: '/destinos/$slug'
       path: '/destinos/$slug'
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuiaViajeroRoute: GuiaViajeroRoute,
   OfertasRoute: OfertasRoute,
   DestinosSlugRoute: DestinosSlugRoute,
+  EnGuiaViajeroRoute: EnGuiaViajeroRoute,
   EnOfertasRoute: EnOfertasRoute,
   DestinosIndexRoute: DestinosIndexRoute,
   EnIndexRoute: EnIndexRoute,
