@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { X, Mail, MessageCircle, Download, Loader2 } from "lucide-react";
-import { Destination, WHATSAPP_NUMBER, COMPANY_EMAIL } from "@/data/destinations";
+import { useState, useEffect } from "react";
+import { X, Download, Loader2 } from "lucide-react";
+import { Destination } from "@/data/destinations";
 import { useLang } from "@/lib/lang";
 import { saveLeadToSheet } from "@/lib/leads.functions";
+
+const STORAGE_KEY = "wlx_user_data";
 
 export function ItineraryDialog({
   destination,
@@ -18,9 +20,23 @@ export function ItineraryDialog({
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [delivery, setDelivery] = useState<"email" | "whatsapp">("email");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.firstName) setFirstName(data.firstName);
+        if (data.lastName) setLastName(data.lastName);
+        if (data.email) setEmail(data.email);
+        if (data.whatsapp) setWhatsapp(data.whatsapp);
+      } catch (e) {
+        console.error("Error parsing saved user data", e);
+      }
+    }
+  }, []);
 
   if (!open) return null;
 
@@ -45,31 +61,19 @@ export function ItineraryDialog({
           lastName: lastName.trim(),
           email: email.trim(),
           whatsapp: whatsapp.trim(),
-          delivery,
           language: lang,
         },
       });
 
-      if (delivery === "whatsapp") {
-        const msg = encodeURIComponent(
-          t(
-            `Hola, soy ${firstName} ${lastName}. Solicité el itinerario de ${destination.name}. Aquí mi enlace: ${pdfAbsoluteUrl}`,
-            `Hi, I'm ${firstName} ${lastName}. I requested the ${destination.name} itinerary. Here is my link: ${pdfAbsoluteUrl}`
-          )
-        );
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
-      } else {
-        const subject = encodeURIComponent(
-          t(`Itinerario ${destination.name} - Wanderlux`, `${destination.name} Itinerary - Wanderlux`)
-        );
-        const body = encodeURIComponent(
-          t(
-            `Hola ${firstName},\n\nGracias por tu interés en ${destination.name}.\n\nDescarga tu itinerario aquí: ${pdfAbsoluteUrl}\n\nSi tienes preguntas, escríbenos a ${COMPANY_EMAIL} o por WhatsApp.\n\nWanderlux`,
-            `Hi ${firstName},\n\nThanks for your interest in ${destination.name}.\n\nDownload your itinerary here: ${pdfAbsoluteUrl}\n\nIf you have any questions, contact us at ${COMPANY_EMAIL} or via WhatsApp.\n\nWanderlux`
-          )
-        );
-        window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-      }
+      // Save to localStorage for future use
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        whatsapp: whatsapp.trim(),
+      }));
+
+
 
       // Also open the PDF directly so the user gets it instantly
       window.open(destination.pdfUrl, "_blank");
@@ -103,8 +107,8 @@ export function ItineraryDialog({
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {t(
-            "Completa tus datos y elige cómo recibir el documento PDF.",
-            "Fill in your details and choose how to receive the PDF."
+            "Completa tus datos y descarga el documento PDF.",
+            "Complete your details and download the PDF document."
           )}
         </p>
 
@@ -148,35 +152,7 @@ export function ItineraryDialog({
             maxLength={20}
           />
 
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold text-primary">
-              {t("¿Dónde quieres recibirlo?", "Where do you want to receive it?")}
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setDelivery("email")}
-                className={`flex items-center justify-center gap-2 rounded-md border-2 px-3 py-2.5 text-sm font-semibold transition-all ${
-                  delivery === "email"
-                    ? "border-gold bg-gold/10 text-primary"
-                    : "border-border bg-background text-muted-foreground hover:border-primary/40"
-                }`}
-              >
-                <Mail className="h-4 w-4" /> {t("Correo", "Email")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setDelivery("whatsapp")}
-                className={`flex items-center justify-center gap-2 rounded-md border-2 px-3 py-2.5 text-sm font-semibold transition-all ${
-                  delivery === "whatsapp"
-                    ? "border-gold bg-gold/10 text-primary"
-                    : "border-border bg-background text-muted-foreground hover:border-primary/40"
-                }`}
-              >
-                <MessageCircle className="h-4 w-4" /> WhatsApp
-              </button>
-            </div>
-          </div>
+
 
           {error && <p className="text-xs text-destructive">{error}</p>}
 
@@ -190,7 +166,7 @@ export function ItineraryDialog({
             ) : (
               <Download className="h-4 w-4" />
             )}
-            {t("Recibir itinerario", "Get itinerary")}
+            {t("Descargar ahora", "Download now")}
           </button>
 
           <p className="text-center text-[11px] text-muted-foreground">

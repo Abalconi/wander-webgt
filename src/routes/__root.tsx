@@ -124,7 +124,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <LangProvider>
         <Header />
-        <main className="min-h-[60vh]">
+        <main>
           <Outlet />
         </main>
         <Footer />

@@ -1,9 +1,10 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Plane, Hotel, Car, Compass, Check, MessageCircle, Download, MapPin } from "lucide-react";
+import { Plane, Hotel, Car, Compass, Check, MessageCircle, Download, MapPin, Camera, CreditCard, Send, Bitcoin, Landmark, ShieldCheck, Sparkles } from "lucide-react";
 import { destinations, getDestination, WHATSAPP_URL, COMPANY_EMAIL } from "@/data/destinations";
 import { ItineraryDialog } from "@/components/ItineraryDialog";
 import { useLang } from "@/lib/lang";
+import { formatPrice } from "@/lib/utils";
 
 export const Route = createFileRoute("/destinos/$slug")({
   loader: ({ params }) => {
@@ -39,10 +40,24 @@ export function DestinoDetalle() {
   const [openDialog, setOpenDialog] = useState(false);
 
   const includes = [
-    { Icon: Plane, title: t("Vuelos", "Flights"), desc: t("Ida y vuelta desde Guatemala", "Round trip from Guatemala") },
-    { Icon: Hotel, title: t("Hotel Resort", "Resort Hotel"), desc: t("Alojamiento todo incluido", "All-inclusive lodging") },
+    { Icon: Plane, title: t("Vuelos", "Flights"), desc: t("Ida y vuelta desde cualquier parte del mundo", "Round trip from anywhere in the world") },
+    { 
+      Icon: Hotel, 
+      title: t("Hotel Resort", "Resort Hotel"), 
+      desc: dest.boarding === "all-inclusive" 
+        ? t("Alojamiento todo incluido", "All-inclusive lodging")
+        : dest.boarding === "breakfast"
+        ? t("Alojamiento con desayunos", "Lodging with breakfast")
+        : t("No incluye alimentos", "Meals not included")
+    },
     { Icon: Car, title: t("Traslados", "Transfers"), desc: t("Aeropuerto-Hotel-Aeropuerto", "Airport-Hotel-Airport") },
-    { Icon: Compass, title: "Tours", desc: t("Excursiones opcionales", "Optional excursions") },
+    { 
+      Icon: dest.slug === "isla-mucura" ? Sparkles : Compass, 
+      title: dest.slug === "isla-mucura" ? t("Piscina Privada", "Private Pool") : "Tours", 
+      desc: dest.slug === "isla-mucura" 
+        ? t("Bungalow frente al mar con piscina privada", "Beachfront bungalow with private pool")
+        : t("Una excursión de cortesía", "A complimentary excursion") 
+    },
   ];
 
   const description = lang === "en" ? dest.descriptionEn : dest.description;
@@ -61,7 +76,7 @@ export function DestinoDetalle() {
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-2 rounded-full bg-gold px-3 py-1 text-sm font-bold text-gold-foreground">
-              {t("Desde", "From")} ${dest.fromPrice}
+              {t("Desde", "From")} {formatPrice(dest.fromPrice, lang)}
             </span>
             <span className="text-sm text-primary-foreground/85">
               {dest.nights} {t("noches", "nights")}
@@ -75,7 +90,7 @@ export function DestinoDetalle() {
           {/* LEFT — info */}
           <div className="lg:col-span-2">
             <h2 className="font-display text-2xl font-bold text-primary">
-              {t("Sobre", "About")} {dest.name}
+              {dest.name}
             </h2>
             <p className="mt-3 text-muted-foreground">{description}</p>
 
@@ -107,27 +122,7 @@ export function DestinoDetalle() {
               ))}
             </div>
 
-            <h2 className="mt-10 font-display text-2xl font-bold text-primary">
-              {t("Puntos destacados del paquete", "Package highlights")}
-            </h2>
-            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-              {(lang === "en" ? dest.highlightsEn : dest.highlights).map((h: string) => (
-                <li key={h} className="flex items-center gap-2 text-sm text-foreground">
-                  <span className="inline-block h-2 w-2 rounded-full bg-gold" /> {h}
-                </li>
-              ))}
-            </ul>
 
-            <h2 className="mt-10 font-display text-2xl font-bold text-primary">
-              {t("El paquete incluye", "The package includes")}
-            </h2>
-            <ul className="mt-4 space-y-2">
-              {includesList.map((item: string) => (
-                <li key={item} className="flex items-center gap-2 text-sm text-foreground">
-                  <Check className="h-4 w-4 text-gold" /> {item}
-                </li>
-              ))}
-            </ul>
 
             {/* Download itinerary CTA */}
             <div className="mt-10 rounded-2xl border-2 border-dashed border-gold/50 bg-gold/10 p-6 text-center">
@@ -156,8 +151,8 @@ export function DestinoDetalle() {
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 {t("Precio desde", "Price from")}
               </p>
-              <div className="mt-1 flex items-baseline gap-2">
-                <span className="font-display text-4xl font-bold text-primary">${dest.fromPrice}</span>
+               <div className="mt-1 flex items-baseline gap-2">
+                <span className="font-display text-4xl font-bold text-primary">{formatPrice(dest.fromPrice, lang)}</span>
               </div>
               <p className="text-xs text-muted-foreground">
                 {t("por persona", "per person")} / {dest.nights} {t("noches", "nights")}
@@ -173,17 +168,38 @@ export function DestinoDetalle() {
               <p className="mt-2 text-center text-[11px] text-muted-foreground">
                 {t("Respuesta en menos de 5 horas en horario laboral.", "Response in less than 5 hours during business hours.")}
               </p>
+              
+              {/* Trust Badges under CTA */}
+              <div className="mt-4 flex flex-col items-center gap-3 rounded-lg bg-secondary/30 p-3">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("Reserva de forma segura", "Secure Booking")}
+                </p>
+                <div className="flex items-center gap-4">
+                   <img src="https://logos-world.net/wp-content/uploads/2020/04/Visa-Logo.png" alt="Visa" className="h-3.5 w-auto" />
+                   <img src="https://logos-world.net/wp-content/uploads/2020/09/Mastercard-Logo.png" alt="Mastercard" className="h-5 w-auto" />
+                   <img src="https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png" alt="Bitcoin" className="h-5 w-auto" />
+                </div>
+                <p className="text-center text-[10px] font-medium leading-tight text-muted-foreground">
+                  {t("Aceptamos todas las tarjetas, transferencias bancarias y Bitcoin.", "We accept all cards, bank transfers, and Bitcoin.")}
+                </p>
+              </div>
 
               <hr className="my-5 border-border" />
 
               <h4 className="text-sm font-semibold text-primary">
-                {t("Ofertas de Viaje desde Guatemala.", "Travel offers from Guatemala.")}
+                {t("Asesoría Experta y Pago Flexible", "Expert Advice and Flexible Payment")}
               </h4>
               <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
-                <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-gold" /> {t("Salidas grupales mensuales", "Monthly group departures")}</li>
-                <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-gold" /> {t("Financiamiento disponible", "Financing available")}</li>
-                <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-gold" /> {t("Grupos de 10+ con descuento", "10+ groups discount")}</li>
+                <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-gold" /> {t("Págalo hasta en 10 cuotas sin recargo", "Pay in up to 10 interest-free installments")}</li>
+                <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-gold" /> {t("Asesoría personalizada y acompañamiento", "Personalized advice and support")}</li>
+                <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-gold" /> {t("Seguro de viaje con cobertura integral (opcional)", "Travel insurance with comprehensive coverage (optional)")}</li>
               </ul>
+
+              <div className="mt-4 text-center">
+                <Link to="/terminos-condiciones" className="text-[10px] text-muted-foreground hover:text-gold underline underline-offset-2 transition-colors">
+                  {t("Al reservar, aceptas nuestros Términos y Condiciones", "By booking, you accept our Terms and Conditions")}
+                </Link>
+              </div>
 
               <hr className="my-5 border-border" />
 
@@ -197,6 +213,67 @@ export function DestinoDetalle() {
         </div>
       </section>
 
+      {/* Reserva en 3 pasos */}
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-6">
+        <h2 className="text-center font-display text-3xl font-bold text-primary md:text-4xl">
+          {t("Reserva en 3 pasos", "Book in 3 steps")}
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">
+          {t("Tu lugar garantizado en menos de 24 horas.", "Your spot guaranteed in less than 24 hours.")}
+        </p>
+
+        <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {/* Paso 1 */}
+          <div className="relative flex flex-col items-center text-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gold/10 text-gold shadow-sm">
+              <Camera className="h-10 w-10" />
+            </div>
+            <div className="absolute right-0 top-10 hidden w-full translate-x-1/2 border-t-2 border-dashed border-border md:block" />
+            <h3 className="mt-6 font-display text-xl font-bold text-primary">{t("1. Asegura tu lugar", "1. Secure your spot")}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("Envía una foto de tu pasaporte por WhatsApp. Tu reserva queda garantizada por 24 horas.", "Send a photo of your passport via WhatsApp. Your reservation is guaranteed for 24 hours.")}
+            </p>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-sm font-bold text-gold-foreground shadow-sm hover:opacity-90"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {t("Enviar mi pasaporte por WhatsApp", "Send my passport via WhatsApp")}
+            </a>
+          </div>
+
+          {/* Paso 2 */}
+          <div className="relative flex flex-col items-center text-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gold/10 text-gold shadow-sm">
+              <CreditCard className="h-10 w-10" />
+            </div>
+            <div className="absolute right-0 top-10 hidden w-full translate-x-1/2 border-t-2 border-dashed border-border md:block" />
+            <h3 className="mt-6 font-display text-xl font-bold text-primary">{t("2. Confirma tu pago", "2. Confirm your payment")}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("Paga mediante depósito, transferencia o tarjeta y envíanos tu comprobante.", "Pay via deposit, transfer, or card and send us your receipt.")}
+            </p>
+          </div>
+
+          {/* Paso 3 */}
+          <div className="flex flex-col items-center text-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald/10 text-emerald shadow-sm">
+              <Send className="h-10 w-10" />
+            </div>
+            <h3 className="mt-6 font-display text-xl font-bold text-primary">{t("3. ¡Listo para viajar!", "3. Ready to travel!")}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("Recibe tus documentos de viaje digitales en menos de 24 horas tras confirmar tu pago.", "Receive your digital travel documents in less than 24 hours after confirming payment.")}
+            </p>
+            <p className="mt-4 text-xs font-semibold text-emerald">
+               {t("✓ Más de 100 viajeros recibieron sus documentos hoy mismo", "✓ More than 100 travelers received their documents today")}
+            </p>
+          </div>
+        </div>
+      </section>
+
+
+
       {/* Otros destinos */}
       <section className="bg-secondary/40 py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -209,7 +286,7 @@ export function DestinoDetalle() {
                 <img src={d.image} alt={d.name} loading="lazy" width={512} height={384} className="aspect-video w-full object-cover transition-transform group-hover:scale-105" />
                 <div className="px-3 py-2">
                   <div className="text-sm font-semibold text-primary">{d.name}</div>
-                  <div className="text-[11px] text-muted-foreground">{t("Desde", "From")} ${d.fromPrice}</div>
+                  <div className="text-[11px] text-muted-foreground">{t("Desde", "From")} {formatPrice(d.fromPrice, lang)}</div>
                 </div>
               </Link>
             ))}
