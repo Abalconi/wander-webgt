@@ -1,0 +1,6 @@
+Contact: mailto:admin@wandergt.com
+Contact: mailto:dalebv87@gmail.com
+Expires: 2027-05-10T00:00:00.000Z
+Preferred-Languages: es, en
+Canonical: https://wandergt.com/.well-known/security.txt
+Policy: https://wandergt.com/terminos-condiciones
