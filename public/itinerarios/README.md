@@ -8,5 +8,7 @@ Sube aquí los archivos PDF de cada destino con el slug exacto:
 - aruba.pdf
 - rio-de-janeiro.pdf
 - cartagena.pdf
+- isla-mucura.pdf
+- mexico-basilica.pdf
 
 Estos archivos serán servidos en `/itinerarios/{slug}.pdf` y enviados al usuario tras completar el formulario.
