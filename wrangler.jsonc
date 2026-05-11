@@ -1,4 +1,9 @@
 {
-  "name": "wanderlux",
-  "compatibility_date": "2024-05-01"
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "wander-webgt",
+  "compatibility_date": "2026-05-08",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "main": "@tanstack/react-start/server-entry"
 }
