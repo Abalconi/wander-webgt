@@ -19,7 +19,8 @@ export default defineConfig({
     plugins: [
       {
         name: 'remove-wrangler-json',
-        closeBundle() {
+        enforce: 'post',
+        writeBundle() {
           const wranglerPath = path.resolve(__dirname, 'dist/client/wrangler.json');
           if (fs.existsSync(wranglerPath)) {
             fs.unlinkSync(wranglerPath);
