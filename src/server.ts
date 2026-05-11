@@ -9,6 +9,8 @@ type ServerEntry = {
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
+import { destinations } from "./data/destinations";
+
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
     serverEntryPromise = import("@tanstack/react-start/server-entry").then(
@@ -66,9 +68,46 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+function buildSitemapXml(request: Request): string {
+  const url = new URL(request.url);
+  const origin = `${url.protocol}//${url.host}`;
+  const staticPaths = [
+    "/",
+    "/en",
+    "/destinos",
+    "/en/destinos",
+    "/ofertas",
+    "/en/ofertas",
+    "/guia-viajero",
+    "/en/guia-viajero",
+    "/terminos-condiciones",
+  ];
+
+  const destinationPaths = destinations.flatMap((destination) => [
+    `/destinos/${destination.slug}`,
+    `/en/destinos/${destination.slug}`,
+  ]);
+
+  const urls = [...staticPaths, ...destinationPaths].map((path) => {
+    return `  <url>\n    <loc>${origin}${path}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`;
+  });
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      if (request.method === "GET" && url.pathname === "/sitemap.xml") {
+        return new Response(buildSitemapXml(request), {
+          headers: {
+            "content-type": "application/xml; charset=utf-8",
+            "cache-control": "public, max-age=0, s-maxage=3600",
+          },
+        });
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
