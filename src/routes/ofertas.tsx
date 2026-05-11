@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Tag, ArrowRight, Flame } from "lucide-react";
-import { destinations, WHATSAPP_URL } from "@/data/destinations";
+import { destinations, getWhatsAppUrl } from "@/data/destinations";
 import { useLang } from "@/lib/lang";
 import { formatPrice } from "@/lib/utils";
 
@@ -41,7 +41,12 @@ export function Ofertas() {
           {t("MAYO: El mes más barato para viajar en todo el año.", "MAY: The cheapest month to travel in the entire year.")} <span className="text-emerald">{t("¡Aprovecha ahora!", "Take advantage now!")}</span>
         </p>
         <a
-          href={WHATSAPP_URL}
+          href={getWhatsAppUrl(
+            t(
+              "Hola, quiero más info sobre los paquetes en la página de ofertas",
+              "Hello, I want more info about the packages on the deals page"
+            )
+          )}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-8 inline-flex items-center gap-2 rounded-md bg-emerald px-6 py-3 text-sm font-semibold text-emerald-foreground hover:opacity-90"

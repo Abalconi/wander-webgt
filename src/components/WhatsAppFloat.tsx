@@ -1,12 +1,52 @@
+import { useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
-import { WHATSAPP_URL } from "@/data/destinations";
+import { WHATSAPP_URL, getWhatsAppTextForPath, getWhatsAppUrl } from "@/data/destinations";
 import { useLang } from "@/lib/lang";
 
 export function WhatsAppFloat() {
-  const { t } = useLang();
+  const { lang, t } = useLang();
+  const [whatsappHref, setWhatsappHref] = useState(WHATSAPP_URL);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const updateHref = () => {
+      const path = window.location.pathname;
+      setWhatsappHref(getWhatsAppUrl(getWhatsAppTextForPath(path, lang)));
+    };
+
+    updateHref();
+
+    const handleLocationChange = () => updateHref();
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("locationchange", handleLocationChange);
+
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function (...args: any[]) {
+      const result = originalPushState.apply(this, args);
+      window.dispatchEvent(new Event("locationchange"));
+      return result;
+    };
+
+    history.replaceState = function (...args: any[]) {
+      const result = originalReplaceState.apply(this, args);
+      window.dispatchEvent(new Event("locationchange"));
+      return result;
+    };
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("locationchange", handleLocationChange);
+      history.pushState = originalPushState;
+      history.replaceState = originalReplaceState;
+    };
+  }, [lang]);
+
   return (
     <a
-      href={WHATSAPP_URL}
+      href={whatsappHref}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"

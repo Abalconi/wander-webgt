@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Search, Plane, Hotel, MapPin, Sparkles, Star } from "lucide-react";
 import { useState } from "react";
 import heroImg from "@/assets/hero.jpg";
-import { destinations, WHATSAPP_URL } from "@/data/destinations";
+import { destinations, getWhatsAppUrl } from "@/data/destinations";
 import { TravelersPicker, TravelersValue } from "@/components/TravelersPicker";
 import { useLang } from "@/lib/lang";
 import { saveLeadToSheet } from "@/lib/leads.functions";
@@ -104,7 +104,12 @@ export function Index() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href={WHATSAPP_URL}
+                href={getWhatsAppUrl(
+                  t(
+                    "Hola, quiero más info sobre los paquetes",
+                    "Hello, I want more info about the packages"
+                  )
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-md bg-gold px-6 py-3 text-sm font-semibold text-gold-foreground shadow-luxe hover:opacity-90"

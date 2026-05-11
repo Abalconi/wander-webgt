@@ -212,4 +212,54 @@ export const getDestination = (slug: string) =>
 
 export const WHATSAPP_NUMBER = "39616185";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
+
+export function getWhatsAppUrl(text?: string) {
+  const url = new URL(WHATSAPP_URL);
+  if (text) url.searchParams.set("text", text);
+  return url.toString();
+}
+
+export function getWhatsAppTextForPath(path: string, lang: "es" | "en" = "es") {
+  const normalized = path.replace(/\/+$|^\s+|\s+$/g, "");
+  const defaultMessage =
+    lang === "es"
+      ? "Hola, quiero más info para un paquete de viajes"
+      : "Hello, I want more info about a travel package";
+
+  if (!normalized || normalized === "/" || normalized === "/en") {
+    return defaultMessage;
+  }
+
+  if (normalized.startsWith("/destinos/") || normalized.startsWith("/en/destinos/")) {
+    const parts = normalized.split("/");
+    const slug = parts[parts.length - 1];
+    const destination = getDestination(slug);
+    if (destination) {
+      return lang === "es"
+        ? `Hola, quiero más info para el paquete a ${destination.name}`
+        : `Hello, I want more info for the package to ${destination.name}`;
+    }
+  }
+
+  if (normalized === "/destinos" || normalized === "/en/destinos") {
+    return lang === "es"
+      ? "Hola, quiero más info sobre los paquetes de destinos"
+      : "Hello, I want more info about the destination packages";
+  }
+
+  if (normalized === "/ofertas" || normalized === "/en/ofertas") {
+    return lang === "es"
+      ? "Hola, quiero más info sobre los paquetes en la página de ofertas"
+      : "Hello, I want more info about the packages on the deals page";
+  }
+
+  if (normalized === "/guia-viajero" || normalized === "/en/guia-viajero") {
+    return lang === "es"
+      ? "Hola, quiero más info sobre la guía del viajero"
+      : "Hello, I want more info about the travel guide";
+  }
+
+  return `${defaultMessage} ${lang === "es" ? "desde la página" : "from the page"} ${normalized}`;
+}
+
 export const COMPANY_EMAIL = "reservas@wandergt.com";

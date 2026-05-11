@@ -1,13 +1,51 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, MessageCircle, Globe } from "lucide-react";
-import { destinations, WHATSAPP_URL } from "@/data/destinations";
+import { destinations, WHATSAPP_URL, getWhatsAppTextForPath, getWhatsAppUrl } from "@/data/destinations";
 import { useLang } from "@/lib/lang";
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const [destOpen, setDestOpen] = useState(false);
   const { lang, setLang, t } = useLang();
+  const [whatsappHref, setWhatsappHref] = useState(WHATSAPP_URL);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const updateHref = () => {
+      const path = window.location.pathname;
+      setWhatsappHref(getWhatsAppUrl(getWhatsAppTextForPath(path, lang)));
+    };
+
+    updateHref();
+
+    const handleLocationChange = () => updateHref();
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("locationchange", handleLocationChange);
+
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function (...args: any[]) {
+      const result = originalPushState.apply(this, args);
+      window.dispatchEvent(new Event("locationchange"));
+      return result;
+    };
+
+    history.replaceState = function (...args: any[]) {
+      const result = originalReplaceState.apply(this, args);
+      window.dispatchEvent(new Event("locationchange"));
+      return result;
+    };
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("locationchange", handleLocationChange);
+      history.pushState = originalPushState;
+      history.replaceState = originalReplaceState;
+    };
+  }, [lang]);
 
   const navLink =
     "text-sm font-medium text-primary/80 hover:text-primary transition-colors";
@@ -78,7 +116,7 @@ export function Header() {
               {lang === "es" ? "ES" : "EN"}
             </button>
             <a
-              href={WHATSAPP_URL}
+              href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden items-center gap-2 rounded-md bg-gold px-4 py-2 text-sm font-semibold text-gold-foreground shadow-card transition-all hover:opacity-90 md:inline-flex"
@@ -124,7 +162,7 @@ export function Header() {
               {lang === "es" ? "Switch to English" : "Cambiar a Español"}
             </button>
             <a
-              href={WHATSAPP_URL}
+              href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-gold px-4 py-2.5 text-sm font-semibold text-gold-foreground"

@@ -1,7 +1,7 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Plane, Hotel, Car, Compass, Check, MessageCircle, Download, MapPin, Camera, CreditCard, Send, Bitcoin, Landmark, ShieldCheck, Sparkles } from "lucide-react";
-import { destinations, getDestination, WHATSAPP_URL, COMPANY_EMAIL } from "@/data/destinations";
+import { destinations, getDestination, getWhatsAppUrl, COMPANY_EMAIL } from "@/data/destinations";
 import { ItineraryDialog } from "@/components/ItineraryDialog";
 import { useLang } from "@/lib/lang";
 import { formatPrice } from "@/lib/utils";
@@ -158,7 +158,12 @@ export function DestinoDetalle() {
                 {t("por persona", "per person")} / {dest.nights} {t("noches", "nights")}
               </p>
               <a
-                href={WHATSAPP_URL}
+                href={getWhatsAppUrl(
+                  t(
+                    `Hola, quiero más info para el paquete a ${dest.name}`,
+                    `Hello, I want more info for the package to ${dest.name}`
+                  )
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-gold px-4 py-3 text-sm font-bold text-gold-foreground hover:opacity-90"
@@ -234,7 +239,12 @@ export function DestinoDetalle() {
               {t("Envía una foto de tu pasaporte por WhatsApp. Tu reserva queda garantizada por 24 horas.", "Send a photo of your passport via WhatsApp. Your reservation is guaranteed for 24 hours.")}
             </p>
             <a
-              href={WHATSAPP_URL}
+              href={getWhatsAppUrl(
+                t(
+                  `Hola, quiero más info para el paquete a ${dest.name}`,
+                  `Hello, I want more info for the package to ${dest.name}`
+                )
+              )}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-sm font-bold text-gold-foreground shadow-sm hover:opacity-90"
