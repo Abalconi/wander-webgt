@@ -1,68 +1,69 @@
-// Webhook URL de Google Apps Script (hardcoded como respaldo seguro)
-const WEBHOOK_URL =
-  "https://script.google.com/macros/s/AKfycbxdmMrLE9NfWU0w8Xg2kwsGdMf_5OhEByYrm6VpBONLqcxQmr8yvTnoiPoTH9TlgzKU/exec";
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 
-export interface LeadData {
-  type: "search" | "itinerary_download";
-  destination?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  whatsapp?: string;
-  delivery?: string;
-  language?: string;
-  departureDate?: string;
-  returnDate?: string;
-  travelers?: string;
-}
+const LeadSchema = z.object({
+  type: z.enum(["search", "itinerary_download"]),
+  destination: z.string().max(100).optional().default(""),
+  firstName: z.string().max(50).optional().default(""),
+  lastName: z.string().max(50).optional().default(""),
+  email: z.string().max(100).optional().default(""),
+  whatsapp: z.string().max(30).optional().default(""),
+  delivery: z.string().max(30).optional().default(""),
+  language: z.string().max(5).optional().default("es"),
+  departureDate: z.string().max(30).optional().default(""),
+  returnDate: z.string().max(30).optional().default(""),
+  travelers: z.string().max(500).optional().default(""),
+});
+
+export type LeadData = z.infer<typeof LeadSchema>;
 
 /**
- * Envía un lead al webhook de Google Apps Script.
- *
- * Usa navigator.sendBeacon cuando está disponible (sobrevive navegaciones de página).
- * Fallback a fetch con text/plain para evitar CORS preflight.
+ * Envía un lead al webhook de Google Apps Script desde el backend.
  */
-export async function saveLeadToSheet(data: LeadData): Promise<{ ok: boolean; error?: string }> {
-  const payload = JSON.stringify({
-    timestamp: new Date().toISOString(),
-    type: data.type ?? "",
-    destination: data.destination ?? "",
-    firstName: data.firstName ?? "",
-    lastName: data.lastName ?? "",
-    email: data.email ?? "",
-    whatsapp: data.whatsapp ?? "",
-    delivery: data.delivery ?? "",
-    language: data.language ?? "es",
-    departureDate: data.departureDate ?? "",
-    returnDate: data.returnDate ?? "",
-    travelers: data.travelers ?? "",
-  });
+export const saveLeadToSheet = createServerFn({ method: "POST" })
+  .inputValidator((input) => LeadSchema.parse(input))
+  .handler(async ({ data }): Promise<{ ok: boolean; error?: string }> => {
+    const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
 
-  // sendBeacon: diseñado para disparar-y-olvidar incluso al navegar
-  if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-    const blob = new Blob([payload], { type: "text/plain;charset=utf-8" });
-    const sent = navigator.sendBeacon(WEBHOOK_URL, blob);
-    if (sent) return { ok: true };
-    // Si sendBeacon devuelve false (cola llena), cae al fetch
-  }
+    if (!webhookUrl) {
+      console.error("GOOGLE_SHEETS_WEBHOOK_URL is not configured");
+      return { ok: false, error: "missing_webhook_url" };
+    }
 
-  // Fallback: fetch normal
-  try {
-    const res = await fetch(WEBHOOK_URL, {
-      method: "POST",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: payload,
+    const payload = JSON.stringify({
+      timestamp: new Date().toISOString(),
+      type: data.type,
+      destination: data.destination,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      whatsapp: data.whatsapp,
+      delivery: data.delivery,
+      language: data.language,
+      departureDate: data.departureDate,
+      returnDate: data.returnDate,
+      travelers: data.travelers,
     });
 
-    if (!res.ok) {
+    try {
+      const res = await fetch(webhookUrl, {
+        method: "POST",
+        redirect: "follow",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: payload,
+      });
+
       const body = await res.text().catch(() => "");
-      console.error(`Webhook failed [${res.status}]: ${body}`);
-      return { ok: false, error: `webhook_${res.status}` };
+
+      if (!res.ok) {
+        console.error(`Google Sheets webhook failed [${res.status}]: ${body}`);
+        return { ok: false, error: `webhook_${res.status}` };
+      }
+
+      console.log(`Google Sheets lead saved: ${data.type} ${data.destination}`);
+      return { ok: true };
+    } catch (err) {
+      console.error("Google Sheets webhook exception:", err);
+      return { ok: false, error: "exception" };
     }
-    return { ok: true };
-  } catch (err) {
-    console.error("Webhook exception:", err);
-    return { ok: false, error: "exception" };
-  }
-}
+  });
