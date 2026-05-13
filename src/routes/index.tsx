@@ -57,16 +57,27 @@ export function Index() {
   const handleSearch = async () => {
     const dest = destinations.find((d) => d.slug === selectedSlug);
     
-await saveLeadToSheet({
-  data: {
-    type: "search",
-    destination: dest?.name ?? t("Cualquier destino", "Any destination"),
-    departureDate,
-    returnDate,
-    travelers: JSON.stringify(travelers.rooms),
-    language: lang,
-  },
-}).catch(() => null);
+    console.log("Iniciando búsqueda y guardado de lead...", {
+      type: "search",
+      destination: dest?.name,
+      departureDate,
+      returnDate,
+      travelers: JSON.stringify(travelers.rooms),
+    });
+
+    try {
+      const result = await saveLeadToSheet({
+        type: "search",
+        destination: dest?.name ?? t("Cualquier destino", "Any destination"),
+        departureDate,
+        returnDate,
+        travelers: JSON.stringify(travelers.rooms),
+        language: lang,
+      });
+      console.log("Resultado de guardado:", result);
+    } catch (err) {
+      console.error("Error al guardar lead del buscador:", err);
+    }
 
     if (selectedSlug) {
       navigate({ to: "/destinos/$slug", params: { slug: selectedSlug } });

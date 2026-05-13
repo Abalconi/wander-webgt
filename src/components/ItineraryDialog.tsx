@@ -54,7 +54,6 @@ export function ItineraryDialog({
 
     // Open the PDF directly so the user gets it instantly and it's not blocked by popup preventers
     const pdfAbsoluteUrl = `${window.location.origin}${destination.pdfUrl}`;
-    console.log("Opening PDF:", pdfAbsoluteUrl);
     window.open(pdfAbsoluteUrl, "_blank");
 
     setLoading(true);
@@ -69,10 +68,8 @@ export function ItineraryDialog({
         language: lang,
       });
 
-      console.log("saveLeadToSheet result:", result);
-
       if (!result.ok) {
-        console.warn("Lead saving failed but PDF was already opened:", result.error);
+        console.warn("Lead saving failed:", result.error);
       }
       
       // Save to localStorage for future use
