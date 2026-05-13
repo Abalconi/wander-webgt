@@ -53,7 +53,9 @@ export function ItineraryDialog({
     }
 
     // Open the PDF directly so the user gets it instantly and it's not blocked by popup preventers
-    window.open(destination.pdfUrl, "_blank");
+    const pdfAbsoluteUrl = `${window.location.origin}${destination.pdfUrl}`;
+    console.log("Opening PDF:", pdfAbsoluteUrl);
+    window.open(pdfAbsoluteUrl, "_blank");
 
     setLoading(true);
     try {

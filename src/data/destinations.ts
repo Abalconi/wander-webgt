@@ -70,7 +70,7 @@ export const destinations: Destination[] = [
     attractions: ["Chichén Itzá", "Xcaret", "Xel-Há", "Isla Mujeres", "Playa del Carmen", "Tulum"],
     includes: ["Vuelos directos", "Hotel Resort Todo Incluido", "Traslados aeropuerto-hotel", "Seguro de viaje"],
     includesEn: ["Direct flights", "All-Inclusive Resort", "Airport-hotel transfers", "Travel insurance"],
-    pdfUrl: "/itinerarios/cancun.pdf",
+    pdfUrl: "/itinerarios/cancun-test.pdf",
     boarding: "all-inclusive",
   },
   {

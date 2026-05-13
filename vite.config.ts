@@ -11,6 +11,7 @@ export default defineConfig({
     tanstackStart(),
     react(),
   ],
+  publicDir: "public",
   css: {
     postcss: "./postcss.config.js",
   },
