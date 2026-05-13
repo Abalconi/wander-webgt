@@ -54,15 +54,13 @@ export function ItineraryDialog({
     setLoading(true);
     try {
       await saveLeadToSheet({
-        data: {
-          type: "itinerary_download",
-          destination: destination.name,
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          email: email.trim(),
-          whatsapp: whatsapp.trim(),
-          language: lang,
-        },
+        type: "itinerary_download",
+        destination: destination.name,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        whatsapp: whatsapp.trim(),
+        language: lang,
       });
 
       // Save to localStorage for future use

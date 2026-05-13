@@ -58,14 +58,12 @@ export function Index() {
     const dest = destinations.find((d) => d.slug === selectedSlug);
     // Save the search lead in background (non-blocking)
     saveLeadToSheet({
-      data: {
-        type: "search",
-        destination: dest?.name ?? t("Cualquier destino", "Any destination"),
-        departureDate,
-        returnDate,
-        travelers: JSON.stringify(travelers.rooms),
-        language: "es",
-      },
+      type: "search",
+      destination: dest?.name ?? t("Cualquier destino", "Any destination"),
+      departureDate,
+      returnDate,
+      travelers: JSON.stringify(travelers.rooms),
+      language: "es",
     }).catch(() => {});
 
     if (selectedSlug) {
