@@ -24,13 +24,13 @@ export function WhatsAppFloat() {
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 
-    history.pushState = function (...args: any[]) {
+    history.pushState = function (...args: Parameters<History["pushState"]>) {
       const result = originalPushState.apply(this, args);
       window.dispatchEvent(new Event("locationchange"));
       return result;
     };
 
-    history.replaceState = function (...args: any[]) {
+    history.replaceState = function (...args: Parameters<History["replaceState"]>) {
       const result = originalReplaceState.apply(this, args);
       window.dispatchEvent(new Event("locationchange"));
       return result;
