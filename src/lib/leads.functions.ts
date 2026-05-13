@@ -18,7 +18,7 @@ const LeadSchema = z.object({
 export const saveLeadToSheet = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => LeadSchema.parse(data))
   .handler(async ({ data }) => {
-    const WEBHOOK_URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+    const WEBHOOK_URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL || process.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL || (import.meta as any).env?.VITE_GOOGLE_SHEETS_WEBHOOK_URL || "https://script.google.com/macros/s/AKfycbxdmMrLE9NfWU0w8Xg2kwsGdMf_5OhEByYrm6VpBONLqcxQmr8yvTnoiPoTH9TlgzKU/exec";
     if (!WEBHOOK_URL) {
       console.error("Missing GOOGLE_SHEETS_WEBHOOK_URL");
       return { ok: false, error: "config" };
