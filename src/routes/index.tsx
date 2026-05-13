@@ -378,7 +378,7 @@ await saveLeadToSheet({
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {destinations.slice(0, 6).map((d) => (
+          {destinations.map((d) => (
             <Link
               key={d.slug}
               to="/destinos/$slug"

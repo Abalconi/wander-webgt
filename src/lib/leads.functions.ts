@@ -20,13 +20,19 @@ export type LeadData = z.infer<typeof LeadSchema>;
 /**
  * Envía un lead al webhook de Google Apps Script desde el backend.
  */
+console.log("leads.functions.ts loaded");
+
 export const saveLeadToSheet = createServerFn({ method: "POST" })
   .inputValidator((input) => LeadSchema.parse(input))
   .handler(async ({ data }): Promise<{ ok: boolean; error?: string }> => {
-    const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+    console.log("saveLeadToSheet handler started", data);
+    const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL || 
+                       (import.meta as any).env.VITE_GOOGLE_SHEETS_WEBHOOK_URL ||
+                       (import.meta as any).env.GOOGLE_SHEETS_WEBHOOK_URL;
 
     if (!webhookUrl) {
-      console.error("GOOGLE_SHEETS_WEBHOOK_URL is not configured");
+      console.error("GOOGLE_SHEETS_WEBHOOK_URL is not configured in process.env or import.meta.env");
+      console.log("Current env keys:", Object.keys(process.env));
       return { ok: false, error: "missing_webhook_url" };
     }
 
@@ -46,6 +52,7 @@ export const saveLeadToSheet = createServerFn({ method: "POST" })
     });
 
     try {
+      console.log(`Attempting fetch to: ${webhookUrl}`);
       const res = await fetch(webhookUrl, {
         method: "POST",
         redirect: "follow",

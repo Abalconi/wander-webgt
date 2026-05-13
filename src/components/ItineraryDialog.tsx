@@ -51,9 +51,13 @@ export function ItineraryDialog({
       setError(t("Completa todos los campos", "Please fill all fields"));
       return;
     }
+
+    // Open the PDF directly so the user gets it instantly and it's not blocked by popup preventers
+    window.open(destination.pdfUrl, "_blank");
+
     setLoading(true);
     try {
-      await saveLeadToSheet({
+      const result = await saveLeadToSheet({
         type: "itinerary_download",
         destination: destination.name,
         firstName: firstName.trim(),
@@ -63,6 +67,12 @@ export function ItineraryDialog({
         language: lang,
       });
 
+      console.log("saveLeadToSheet result:", result);
+
+      if (!result.ok) {
+        console.warn("Lead saving failed but PDF was already opened:", result.error);
+      }
+      
       // Save to localStorage for future use
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         firstName: firstName.trim(),
@@ -71,14 +81,11 @@ export function ItineraryDialog({
         whatsapp: whatsapp.trim(),
       }));
 
-
-
-      // Also open the PDF directly so the user gets it instantly
-      window.open(destination.pdfUrl, "_blank");
       onClose();
     } catch (err) {
-      console.error(err);
-      setError(t("Error al enviar. Intenta de nuevo.", "Submission failed. Please try again."));
+      console.error("Error saving lead:", err);
+      // We don't show the error to the user anymore because the PDF is already opening
+      onClose();
     } finally {
       setLoading(false);
     }

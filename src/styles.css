@@ -1,11 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+@import "tailwindcss";
 @import "tw-animate-css";
 
-:root {
+@theme {
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
   --radius-xl: calc(var(--radius) + 4px);
+  --radius: 0.5rem;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -25,14 +27,13 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-emerald: var(--gold);
-  --color-emerald-foreground: var(--gold-foreground);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --color-emerald: var(--gold);
+  --color-emerald-foreground: var(--gold-foreground);
+}
 
-  --radius: 0.5rem;
+:root {
   --background: oklch(0.99 0.003 240);
   --foreground: oklch(0.18 0.05 250);
 
