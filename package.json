@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "postbuild": "node -e \"const fs=require('fs'); const from='dist/server/server.js', alt='dist/server/index.js'; if(fs.existsSync(from) & !fs.existsSync(alt)) fs.renameSync(from, alt); try{fs.unlinkSync('dist/client/wrangler.json')}catch(e){}\"",
+    "postbuild": "node -e \"const fs=require('fs'); try{fs.unlinkSync('dist/client/wrangler.json')}catch(e){}\"",
     "deploy": "npm run build && npx wrangler deploy",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
