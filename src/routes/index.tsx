@@ -56,15 +56,17 @@ export function Index() {
 
   const handleSearch = async () => {
     const dest = destinations.find((d) => d.slug === selectedSlug);
-    // Save the search lead in background (non-blocking)
-    saveLeadToSheet({
-      type: "search",
-      destination: dest?.name ?? t("Cualquier destino", "Any destination"),
-      departureDate,
-      returnDate,
-      travelers: JSON.stringify(travelers.rooms),
-      language: "es",
-    }).catch(() => {});
+    
+await saveLeadToSheet({
+  data: {
+    type: "search",
+    destination: dest?.name ?? t("Cualquier destino", "Any destination"),
+    departureDate,
+    returnDate,
+    travelers: JSON.stringify(travelers.rooms),
+    language: lang,
+  },
+}).catch(() => null);
 
     if (selectedSlug) {
       navigate({ to: "/destinos/$slug", params: { slug: selectedSlug } });
