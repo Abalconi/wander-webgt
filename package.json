@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "postbuild": "node -e \"import fs from 'fs'; const from = 'dist/server/server.js'; const alt = 'dist/server/index.js'; if (fs.existsSync(from) && !fs.existsSync(alt)) fs.renameSync(from, alt);\"",
+    "postbuild": "node -e \"import fs from 'fs'; const from = 'dist/server/server.js'; const alt = 'dist/server/index.js'; if (fs.existsSync(from) && !fs.existsSync(alt)) fs.renameSync(from, alt);\" && (del dist/client/wrangler.json 2>nul || true)",
     "deploy": "npm run build && npx wrangler deploy",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
