@@ -12,6 +12,12 @@ export const Route = createFileRoute("/ofertas")({
       { property: "og:title", content: "Ofertas de Viajes para Vacaciones de Junio" },
       { property: "og:description", content: "Junio: las mejores ofertas para tus vacaciones de medio año. ¡Aprovecha ahora!" },
     ],
+    links: [
+      { rel: "canonical", href: "https://wandergt.com/ofertas" },
+      { rel: "alternate", hreflang: "es", href: "https://wandergt.com/ofertas" },
+      { rel: "alternate", hreflang: "en", href: "https://wandergt.com/en/ofertas" },
+      { rel: "alternate", hreflang: "x-default", href: "https://wandergt.com/ofertas" },
+    ],
   }),
   component: Ofertas,
 });

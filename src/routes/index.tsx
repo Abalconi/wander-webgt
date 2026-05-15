@@ -30,6 +30,12 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Paquetes todo incluido a los mejores destinos del Caribe y Latinoamérica." },
       { property: "og:image", content: heroImg },
     ],
+    links: [
+      { rel: "canonical", href: "https://wandergt.com/" },
+      { rel: "alternate", hreflang: "es", href: "https://wandergt.com/" },
+      { rel: "alternate", hreflang: "en", href: "https://wandergt.com/en" },
+      { rel: "alternate", hreflang: "x-default", href: "https://wandergt.com/" },
+    ],
   }),
   component: Index,
 });

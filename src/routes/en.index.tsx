@@ -10,6 +10,12 @@ export const Route = createFileRoute("/en/")({
       { property: "og:title", content: "Wanderlux | Travel Agency" },
       { property: "og:description", content: "All-inclusive packages to the best destinations in the Caribbean and Latin America." },
     ],
+    links: [
+      { rel: "canonical", href: "https://wandergt.com/en" },
+      { rel: "alternate", hreflang: "es", href: "https://wandergt.com/" },
+      { rel: "alternate", hreflang: "en", href: "https://wandergt.com/en" },
+      { rel: "alternate", hreflang: "x-default", href: "https://wandergt.com/" },
+    ],
   }),
   component: () => (
     <>

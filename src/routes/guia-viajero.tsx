@@ -10,6 +10,12 @@ export const Route = createFileRoute("/guia-viajero")({
       { property: "og:title", content: "Guía del Viajero: Consejos y Requisitos" },
       { property: "og:description", content: "Todo lo que necesitas saber antes de tu próximo viaje." },
     ],
+    links: [
+      { rel: "canonical", href: "https://wandergt.com/guia-viajero" },
+      { rel: "alternate", hreflang: "es", href: "https://wandergt.com/guia-viajero" },
+      { rel: "alternate", hreflang: "en", href: "https://wandergt.com/en/guia-viajero" },
+      { rel: "alternate", hreflang: "x-default", href: "https://wandergt.com/guia-viajero" },
+    ],
   }),
   component: Guia,
 });

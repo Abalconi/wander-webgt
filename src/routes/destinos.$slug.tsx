@@ -23,6 +23,12 @@ export const Route = createFileRoute("/destinos/$slug")({
         { property: "og:description", content: d.description },
         { property: "og:image", content: d.image },
       ],
+      links: [
+        { rel: "canonical", href: `https://wandergt.com/destinos/${d.slug}` },
+        { rel: "alternate", hreflang: "es", href: `https://wandergt.com/destinos/${d.slug}` },
+        { rel: "alternate", hreflang: "en", href: `https://wandergt.com/en/destinos/${d.slug}` },
+        { rel: "alternate", hreflang: "x-default", href: `https://wandergt.com/destinos/${d.slug}` },
+      ],
     };
   },
   component: DestinoDetalle,

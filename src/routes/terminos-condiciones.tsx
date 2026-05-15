@@ -8,6 +8,11 @@ export const Route = createFileRoute("/terminos-condiciones")({
       { title: "Términos y Condiciones | Wanderlux" },
       { name: "description", content: "Consulta las políticas de reserva, reembolsos y responsabilidades para tu viaje con Wanderlux." },
     ],
+    links: [
+      { rel: "canonical", href: "https://wandergt.com/terminos-condiciones" },
+      { rel: "alternate", hreflang: "es", href: "https://wandergt.com/terminos-condiciones" },
+      { rel: "alternate", hreflang: "x-default", href: "https://wandergt.com/terminos-condiciones" },
+    ],
   }),
   component: TerminosPage,
 });
