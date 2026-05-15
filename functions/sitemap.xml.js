@@ -1,39 +1,17 @@
-import handler from "@tanstack/react-start/server-entry";
-import { destinations } from "./data/destinations";
-
-export default {
-  async fetch(request: Request, env: any, ctx: any) {
-    const url = new URL(request.url);
-
-    // Interceptar /sitemap.xml
-    if (url.pathname === "/sitemap.xml") {
-      const sitemap = generateSitemap(destinations);
-      return new Response(sitemap, {
-        headers: { "Content-Type": "application/xml" },
-      });
-    }
-
-    // Interceptar /robots.txt
-    if (url.pathname === "/robots.txt") {
-      const robots = `# https://www.robotstxt.org/robotstxt.html
-
-User-agent: *
-Allow: /
-
-Sitemap: https://wandergt.com/sitemap.xml
-`;
-      return new Response(robots, {
-        headers: { "Content-Type": "text/plain" },
-      });
-    }
-
-    // Delegar todo lo demás al handler de TanStack Start
-    return handler.fetch(request, env, ctx);
-  },
-};
-
-function generateSitemap(destinations: any[]) {
+export function onRequest() {
   const baseUrl = "https://wandergt.com";
+  const slugs = [
+    "punta-cana",
+    "cancun",
+    "curazao",
+    "aruba",
+    "rio-de-janeiro",
+    "cartagena",
+    "mexico-basilica",
+    "isla-mucura",
+    "peten"
+  ];
+
   const staticPages = [
     "",
     "/destinos",
@@ -68,9 +46,9 @@ function generateSitemap(destinations: any[]) {
     return items;
   }).join("");
 
-  const destinationUrls = destinations.map((dest) => {
-    const esUrl = `${baseUrl}/destinos/${dest.slug}`;
-    const enUrl = `${baseUrl}/en/destinos/${dest.slug}`;
+  const destinationUrls = slugs.map((slug) => {
+    const esUrl = `${baseUrl}/destinos/${slug}`;
+    const enUrl = `${baseUrl}/en/destinos/${slug}`;
     
     return `
   <url>
@@ -89,9 +67,13 @@ function generateSitemap(destinations: any[]) {
   </url>`;
   }).join("");
 
-  return `<?xml version="1.0" encoding="UTF-8"?>
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   ${staticUrls}
   ${destinationUrls}
 </urlset>`;
+
+  return new Response(sitemap, {
+    headers: { "Content-Type": "application/xml" },
+  });
 }
