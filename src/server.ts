@@ -1,119 +1,97 @@
-import "./lib/error-capture";
-
-import { consumeLastCapturedError } from "./lib/error-capture";
-import { renderErrorPage } from "./lib/error-page";
-
-type ServerEntry = {
-  fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
-};
-
-let serverEntryPromise: Promise<ServerEntry> | undefined;
-
+import handler from "@tanstack/react-start/server-entry";
 import { destinations } from "./data/destinations";
 
-async function getServerEntry(): Promise<ServerEntry> {
-  if (!serverEntryPromise) {
-    serverEntryPromise = import("@tanstack/react-start/server-entry").then(
-      (m) => ((m as { default?: ServerEntry }).default ?? (m as unknown as ServerEntry)),
-    );
-  }
-  return serverEntryPromise;
-}
+export default {
+  async fetch(request: Request, env: any, ctx: any) {
+    const url = new URL(request.url);
 
-function brandedErrorResponse(): Response {
-  return new Response(renderErrorPage(), {
-    status: 500,
-    headers: { "content-type": "text/html; charset=utf-8" },
-  });
-}
+    // Interceptar /sitemap.xml
+    if (url.pathname === "/sitemap.xml") {
+      const sitemap = generateSitemap(destinations);
+      return new Response(sitemap, {
+        headers: { "Content-Type": "application/xml" },
+      });
+    }
 
-function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boolean {
-  let payload: unknown;
-  try {
-    payload = JSON.parse(body);
-  } catch {
-    return false;
-  }
+    // Interceptar /robots.txt
+    if (url.pathname === "/robots.txt") {
+      const robots = `# https://www.robotstxt.org/robotstxt.html
 
-  if (!payload || Array.isArray(payload) || typeof payload !== "object") {
-    return false;
-  }
+User-agent: *
+Allow: /
 
-  const fields = payload as Record<string, unknown>;
-  const expectedKeys = new Set(["message", "status", "unhandled"]);
-  if (!Object.keys(fields).every((key) => expectedKeys.has(key))) {
-    return false;
-  }
+Sitemap: https://wandergt.com/sitemap.xml
+`;
+      return new Response(robots, {
+        headers: { "Content-Type": "text/plain" },
+      });
+    }
 
-  return (
-    fields.unhandled === true &&
-    fields.message === "HTTPError" &&
-    (fields.status === undefined || fields.status === responseStatus)
-  );
-}
+    // Delegar todo lo demás al handler de TanStack Start
+    return handler.fetch(request, env, ctx);
+  },
+};
 
-// h3 swallows in-handler throws into a normal 500 Response with body
-// {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
-async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
-  if (response.status < 500) return response;
-  const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.includes("application/json")) return response;
-
-  const body = await response.clone().text();
-  if (!isCatastrophicSsrErrorBody(body, response.status)) {
-    return response;
-  }
-
-  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
-  return brandedErrorResponse();
-}
-
-function buildSitemapXml(request: Request): string {
-  const url = new URL(request.url);
-  const origin = `${url.protocol}//${url.host}`;
-  const staticPaths = [
-    "/",
-    "/en",
+function generateSitemap(destinations: any[]) {
+  const baseUrl = "https://wandergt.com";
+  const staticPages = [
+    "",
     "/destinos",
-    "/en/destinos",
     "/ofertas",
-    "/en/ofertas",
     "/guia-viajero",
-    "/en/guia-viajero",
     "/terminos-condiciones",
   ];
 
-  const destinationPaths = destinations.flatMap((destination) => [
-    `/destinos/${destination.slug}`,
-    `/en/destinos/${destination.slug}`,
-  ]);
+  const staticUrls = staticPages.map((page) => {
+    const esUrl = `${baseUrl}${page}`;
+    const enUrl = page === "/terminos-condiciones" ? null : `${baseUrl}/en${page}`;
+    
+    let items = `
+  <url>
+    <loc>${esUrl}</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="${esUrl}"/>
+    ${enUrl ? `<xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>` : ''}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${esUrl}"/>
+    <priority>${page === '' ? '1.0' : '0.8'}</priority>
+  </url>`;
 
-  const urls = [...staticPaths, ...destinationPaths].map((path) => {
-    return `  <url>\n    <loc>${origin}${path}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`;
-  });
-
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
-}
-
-export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
-    try {
-      const url = new URL(request.url);
-      if (request.method === "GET" && url.pathname === "/sitemap.xml") {
-        return new Response(buildSitemapXml(request), {
-          headers: {
-            "content-type": "application/xml; charset=utf-8",
-            "cache-control": "public, max-age=0, s-maxage=3600",
-          },
-        });
-      }
-
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
-    } catch (error) {
-      console.error(error);
-      return brandedErrorResponse();
+    if (enUrl) {
+      items += `
+  <url>
+    <loc>${enUrl}</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="${esUrl}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${esUrl}"/>
+    <priority>0.7</priority>
+  </url>`;
     }
-  },
-};
+    return items;
+  }).join("");
+
+  const destinationUrls = destinations.map((dest) => {
+    const esUrl = `${baseUrl}/destinos/${dest.slug}`;
+    const enUrl = `${baseUrl}/en/destinos/${dest.slug}`;
+    
+    return `
+  <url>
+    <loc>${esUrl}</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="${esUrl}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${esUrl}"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${enUrl}</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="${esUrl}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${esUrl}"/>
+    <priority>0.7</priority>
+  </url>`;
+  }).join("");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  ${staticUrls}
+  ${destinationUrls}
+</urlset>`;
+}
