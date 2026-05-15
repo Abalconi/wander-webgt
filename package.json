@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "postbuild": "node -e \"const fs=require('fs');const p='dist/client/wrangler.json';try{const c=JSON.parse(fs.readFileSync(p,'utf8'));delete c.triggers;delete c.assets;delete c.definedEnvironments;delete c.ai_search_namespaces;delete c.ai_search;delete c.secrets_store_secrets;delete c.artifacts;delete c.unsafe_hello_world;delete c.flagship;delete c.worker_loaders;delete c.ratelimits;delete c.vpc_services;delete c.vpc_networks;delete c.python_modules;delete c.dev;fs.writeFileSync(p,JSON.stringify(c,null,2))}catch(e){}\"",
+    "postbuild": "node -e \"const fs=require('fs');const path=require('path');const clientDir='dist/client';const serverFile='dist/server/server.js';if(fs.existsSync(serverFile)){fs.copyFileSync(serverFile,path.join(clientDir,'_worker.js'));const wranglerPath=path.join(clientDir,'wrangler.json');const c=JSON.parse(fs.readFileSync(wranglerPath,'utf8'));c.main='_worker.js';delete c.triggers;fs.writeFileSync(wranglerPath,JSON.stringify(c,null,2));console.log('Fixed!')}else{console.log('No server.js found')}\"",
     "deploy": "npm run build && npx wrangler deploy",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",

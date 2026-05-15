@@ -6,6 +6,7 @@ import rio from "@/assets/rio.jpg";
 import cartagena from "@/assets/cartagena.jpg";
 import mexico from "@/assets/mexico.png";
 import mucura from "@/assets/mucura.png";
+import peten from "@/assets/peten.png";
 
 export type Destination = {
   slug: string;
@@ -203,6 +204,28 @@ export const destinations: Destination[] = [
     includes: ["Vuelos", "2 noches en Cartagena + 2 en Isla Múcura", "Bungalow con piscina privada", "Traslados lancha y tierra"],
     includesEn: ["Flights", "2 nights in Cartagena + 2 in Isla Mucura", "Bungalow with private pool", "Boat and land transfers"],
     pdfUrl: "/itinerarios/isla-mucura.pdf",
+    boarding: "breakfast",
+  },
+  {
+    slug: "peten",
+    name: "Petén (Tikal)",
+    seoTitle: "Paquetes a Petén y Tikal desde Guatemala",
+    seoTitleEn: "Peten and Tikal Packages from Guatemala",
+    tagline: "Cuna de la civilización Maya",
+    taglineEn: "Cradle of the Mayan civilization",
+    image: peten,
+    description:
+      "Explora la majestuosidad de Tikal y la selva del Petén. Ofrecemos opciones flexibles desde tours de un día hasta estadías de 1 o 2 noches para que vivas la magia de la civilización Maya a tu propio ritmo.",
+    descriptionEn:
+      "Explore the majesty of Tikal and the Petén jungle. We offer flexible options from one-day tours to 1 or 2-night stays so you can experience the magic of the Mayan civilization at your own pace.",
+    highlights: ["Tikal", "Isla de Flores", "Yaxhá", "Crater Azul"],
+    highlightsEn: ["Tikal", "Flores Island", "Yaxhá", "Blue Crater"],
+    fromPrice: 1499,
+    nights: 2,
+    attractions: ["Gran Plaza de Tikal", "Isla de Flores", "Parque Yaxhá", "Crater Azul", "Castillo de Arrivillaga"],
+    includes: ["Transporte terrestre o aéreo", "Hotel seleccionado", "Tours guiados", "Entradas a parques"],
+    includesEn: ["Land or air transportation", "Selected hotel", "Guided tours", "Park entrance fees"],
+    pdfUrl: "/itinerarios/tika-3-dias.pdf",
     boarding: "breakfast",
   },
 ];
