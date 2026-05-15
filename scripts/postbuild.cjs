@@ -179,7 +179,7 @@ var SITEMAP = '<?xml version="1.0" encoding="UTF-8"?>' +
 '  </url>' +
 '</urlset>';
 
-var ROBOTS = 'User-agent: *\\\\nAllow: /\\\\n\\\\nSitemap: https://wandergt.com/sitemap.xml\\\\n';
+var ROBOTS = 'User-agent: *\\nAllow: /\\n\\nSitemap: https://wandergt.com/sitemap.xml\\n';
 
 export default {
   async fetch(request, env, ctx) {
