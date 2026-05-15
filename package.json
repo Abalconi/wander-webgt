@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "postbuild": "node -e \"const fs=require('fs');const path=require('path');const clientDir='dist/client';const serverFile='dist/server/server.js';if(fs.existsSync(serverFile)){fs.copyFileSync(serverFile,path.join(clientDir,'_worker.js'));const wranglerPath=path.join(clientDir,'wrangler.json');const c=JSON.parse(fs.readFileSync(wranglerPath,'utf8'));c.main='_worker.js';delete c.triggers;fs.writeFileSync(wranglerPath,JSON.stringify(c,null,2));console.log('Fixed!')}else{console.log('No server.js found')}\"",
+    "postbuild": "node scripts/postbuild.js",
     "deploy": "npm run build && npx wrangler deploy",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
