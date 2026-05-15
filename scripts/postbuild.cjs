@@ -22,9 +22,14 @@ if (fs.existsSync(serverAssets)) {
     fs.mkdirSync(clientAssets, { recursive: true });
   }
   fs.readdirSync(serverAssets).forEach(f => {
-    fs.copyFileSync(path.join(serverAssets, f), path.join(clientAssets, f));
+    const src = path.join(serverAssets, f);
+    let content = fs.readFileSync(src, 'utf8');
+    // Fix imports: ../server.js -> ../_worker.js
+    content = content.replace(/from\s+["']\.\.\/server\.js["']/g, 'from "../_worker.js"');
+    content = content.replace(/import\s*\(\s*["']\.\.\/server\.js["']\s*\)/g, 'import("../_worker.js")');
+    fs.writeFileSync(path.join(clientAssets, f), content);
   });
-  console.log('Assets copied!');
+  console.log('Assets copied and fixed!');
 }
 
 // Fix wrangler.json
