@@ -1,8 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createAPIFileRoute } from '@tanstack/react-start/api';
 import { destinations } from '@/data/destinations';
 
-export const Route = createFileRoute('/sitemap.xml')({
-  loader: () => {
+export const APIRoute = createAPIFileRoute('/sitemap.xml')({
+  GET: () => {
     const baseUrl = 'https://wandergt.com';
     const staticPages = [
       '',

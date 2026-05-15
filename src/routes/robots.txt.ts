@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createAPIFileRoute } from '@tanstack/react-start/api';
 
-export const Route = createFileRoute('/robots.txt')({
-  loader: () => {
+export const APIRoute = createAPIFileRoute('/robots.txt')({
+  GET: () => {
     const robots = `# https://www.robotstxt.org/robotstxt.html
 
 User-agent: *
