@@ -220,7 +220,7 @@ export const destinations: Destination[] = [
       "Explore the majesty of Tikal and the Petén jungle. We offer flexible options from one-day tours to 1 or 2-night stays so you can experience the magic of the Mayan civilization at your own pace.",
     highlights: ["Tikal", "Isla de Flores", "Yaxhá", "Crater Azul"],
     highlightsEn: ["Tikal", "Flores Island", "Yaxhá", "Blue Crater"],
-    fromPrice: 1499,
+    fromPrice: 3658,
     nights: 2,
     attractions: ["Gran Plaza de Tikal", "Isla de Flores", "Parque Yaxhá", "Crater Azul", "Castillo de Arrivillaga"],
     includes: ["Transporte terrestre o aéreo", "Hotel seleccionado", "Tours guiados", "Entradas a parques"],
